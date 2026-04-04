@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from "astro:content";
+import BlogPostLayout from "@/layouts/BlogPostLayout.astro";
+import { calculateReadingTime } from "@/utils/readingTime";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// 方案 A：使用 headings 估算（粗略）
+// 或者从 post 的原始数据中获取内容长度
+
+// 方案 B：直接读取文件内容（如果需要准确字数）
+// 或者使用一个简单的估算值
+
+// 方案 C：检查 post 是否有其他属性可用
+console.log(Object.keys(post)); // 调试用，查看可用属性
+
+// 临时方案：使用默认值或基于标题估算
+const readingTime = 5; // 先写死，或基于字数估算
+---
+
+<BlogPostLayout 
+  frontmatter={post.data} 
+  headings={headings}
+  readingTime={readingTime}
+>
+  <Content />
+</BlogPostLayout>

@@ -1,0 +1,49 @@
+---
+import { NAV, SITE } from "@/consts.ts";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<header
+    class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800"
+>
+    <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a
+            href="/"
+            class="text-xl font-bold hover:text-blue-600 transition-colors"
+        >
+            {SITE.title}
+        </a>
+
+        <!-- 桌面导航 -->
+        <div class="hidden md:flex items-center gap-6">
+            {
+                NAV.map((item) => (
+                    <a
+                        href={item.link}
+                        class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                        {item.text}
+                    </a>
+                ))
+            }
+            <ThemeToggle />
+        </div>
+
+        <!-- 移动端菜单按钮（简化版，可扩展为抽屉） -->
+        <button class="md:hidden p-2" aria-label="菜单">
+            <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </nav>
+</header>

@@ -1,0 +1,83 @@
+---
+import { SITE } from "@/consts.ts";
+import "@/styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    type?: "website" | "article";
+}
+
+const {
+    title = SITE.title,
+    description = SITE.description,
+    image = "/images/og-default.jpg",
+    type = "website",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pageTitle = title === SITE.title ? title : `${title} | ${SITE.title}`;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+        <!-- SEO -->
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalURL} />
+
+        <!-- Open Graph -->
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:type" content={type} />
+        <meta property="og:image" content={new URL(image, Astro.site)} />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+        <!-- RSS -->
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title={`RSS Feed for ${SITE.title}`}
+            href="/rss.xml"
+        />
+
+        <!-- 主题切换（防止闪烁） -->
+        <script is:inline>
+            const theme = (() => {
+                if (
+                    typeof localStorage !== "undefined" &&
+                    localStorage.getItem("theme")
+                ) {
+                    return localStorage.getItem("theme");
+                }
+                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    return "dark";
+                }
+                return "light";
+            })();
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+            }
+        </script>
+        <!-- 🔥 Vercel Analytics -->
+        <Analytics />
+    </head>
+    <body
+        class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors"
+    >
+        <slot />
+    </body>
+</html>

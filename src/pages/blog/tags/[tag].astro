@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@/layouts/PageLayout.astro";
+import BlogCard from "@/components/content/BlogCard.astro";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog", ({ data }) => !data.draft);
+    const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+    return tags.map((tag) => ({
+        params: { tag },
+        props: {
+            posts: posts.filter((p) => p.data.tags.includes(tag)),
+            tag,
+        },
+    }));
+}
+
+const { posts, tag } = Astro.props;
+---
+
+<PageLayout title={`标签: ${tag}`}>
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <h1 class="text-4xl font-bold mb-2">#{tag}</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-8">
+            共 {posts.length} 篇文章
+        </p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post) => <BlogCard post={post} />)}
+        </div>
+
+        <div class="mt-12">
+            <a href="/blog" class="text-blue-600 hover:underline">← 返回博客</a>
+        </div>
+    </div>
+</PageLayout>

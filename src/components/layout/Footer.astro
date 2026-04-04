@@ -1,0 +1,54 @@
+---
+import { SOCIAL, SITE } from "@/consts.ts";
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+    class="border-t border-gray-200 dark:border-gray-800 mt-20 py-12 bg-gray-50 dark:bg-gray-800/50"
+>
+    <div
+        class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4"
+    >
+        <div class="text-gray-600 dark:text-gray-400 text-sm">
+            © {currentYear}
+            {SITE.title}. All rights reserved.
+        </div>
+
+        <div class="flex gap-4">
+            {
+                SOCIAL.github && (
+                    <a
+                        href={SOCIAL.github}
+                        target="_blank"
+                        rel="noopener"
+                        class="text-gray-600 dark:text-gray-400 hover:text-blue-600"
+                    >
+                        GitHub
+                    </a>
+                )
+            }
+            <!-- {
+                SOCIAL.twitter && (
+                    <a
+                        href={SOCIAL.twitter}
+                        target="_blank"
+                        rel="noopener"
+                        class="text-gray-600 dark:text-gray-400 hover:text-blue-600"
+                    >
+                        Twitter
+                    </a>
+                )
+            } -->
+            {
+                SOCIAL.email && (
+                    <a
+                        href={`mailto:${SOCIAL.email}`}
+                        class="text-gray-600 dark:text-gray-400 hover:text-blue-600"
+                    >
+                        Email
+                    </a>
+                )
+            }
+        </div>
+    </div>
+</footer>

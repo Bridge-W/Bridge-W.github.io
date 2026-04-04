@@ -1,0 +1,334 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { Icon } from "astro-icon/components";
+import EmailToast from "@/components/ui/EmailToast.astro";
+import { getCollection } from "astro:content";
+
+// 🔥 构建时获取文章数
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const postCount = posts.length;
+
+// 🔥 项目数（如果你有 projects 集合，也可以动态获取）
+const projects = await getCollection("projects").catch(() => []);
+const projectCount = projects.length || 5;
+---
+
+<!-- 布局区域 -->
+<PageLayout title="关于我" description="Bridge-W 的个人介绍、技术栈和联系方式">
+	<!-- Hero 区域 -->
+	<section class="py-12 border-b border-gray-200 dark:border-gray-800">
+		<div class="flex flex-col md:flex-row items-center gap-8">
+			<!-- 头像 -->
+			<div class="relative group">
+				<!-- 外层旋转光效 -->
+				<div
+					class="absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full blur opacity-20 group-hover:opacity-60 transition duration-1000 animate-spin-slow"
+				>
+				</div>
+
+				<!-- 中层呼吸光环 -->
+				<div
+					class="absolute inset-0 rounded-full bg-blue-500/20 animate-ping-slow"
+				>
+				</div>
+
+				<!-- 头像主体 -->
+				<div
+					class="relative w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white transform transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 shadow-xl overflow-hidden"
+				>
+					<!-- 内部高光 -->
+					<div
+						class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/30 to-transparent"
+					>
+					</div>
+
+					<!-- 文字 -->
+					<span class="relative z-10 drop-shadow-lg">BW</span>
+
+					<!-- 悬停时的光扫效果 -->
+					<div
+						class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+					>
+					</div>
+				</div>
+
+				<!-- 在线状态点 -->
+				<div
+					class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white dark:border-gray-900 rounded-full animate-pulse"
+				>
+				</div>
+			</div>
+
+			<style>
+				@keyframes spin-slow {
+					from {
+						transform: rotate(0deg);
+					}
+					to {
+						transform: rotate(360deg);
+					}
+				}
+				.animate-spin-slow {
+					animation: spin-slow 10s linear infinite;
+				}
+
+				@keyframes ping-slow {
+					0% {
+						transform: scale(1);
+						opacity: 0.3;
+					}
+					100% {
+						transform: scale(1.3);
+						opacity: 0;
+					}
+				}
+				.animate-ping-slow {
+					animation: ping-slow 2s ease-out infinite;
+				}
+			</style>
+			<div class="text-center md:text-left">
+				<!-- 名字：渐变文字 -->
+				<h1
+					class="text-5xl md:text-6xl font-extrabold mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight leading-tight py-1"
+					style="font-family: var(--font-display);"
+				>
+					Bridge-W
+				</h1>
+				<p
+					class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-4 group cursor-default"
+				>
+					<span class="relative inline-block">
+						<!-- 下划线动画 -->
+						<span class="relative z-10"
+							>人生甚是无趣，去码头整点薯条</span
+						>
+						<span
+							class="absolute bottom-0 left-0 w-0 h-3 bg-yellow-200 dark:bg-yellow-900/50 -z-0 group-hover:w-full transition-all duration-300"
+						></span>
+					</span>
+					<span class="inline-block animate-bounce ml-2">🍟</span>
+				</p>
+				<!-- 修改后的 Email 按钮 -->
+				<div class="flex gap-4 justify-center md:justify-start">
+					<a
+						href="https://github.com/Bridge-W"
+						target="_blank"
+						class="px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:opacity-80 transition-opacity"
+					>
+						GitHub
+					</a>
+
+					<!-- 🔥 点击显示 Toast 的 Email 按钮 -->
+					<button
+						id="email-btn"
+						class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2"
+					>
+						<svg
+							class="w-4 h-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+							></path>
+						</svg>
+						Email
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 个人简介 -->
+	<section class="py-12 space-y-6">
+		<h2 class="text-2xl font-bold border-l-4 border-blue-500 pl-4">
+			关于我
+		</h2>
+		<p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+			你好！我是Bridge-W，不知道该怎么介绍自己，我是一个普通人，希望能做点什么有意思的东西。
+		</p>
+	</section>
+
+	<!-- 数据统计 -->
+	<section class="py-12 border-t border-gray-200 dark:border-gray-800">
+		<h2 class="text-2xl font-bold border-l-4 border-yellow-500 pl-4 mb-6">
+			博客数据
+		</h2>
+		<div class="grid grid-cols-3 gap-6 text-center">
+			<!-- 文章数 - 构建时获取 -->
+			<div
+				class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:shadow-lg transition-all hover:-translate-y-1"
+			>
+				<div class="text-3xl font-bold text-blue-600">{postCount}</div>
+				<div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+					文章
+				</div>
+			</div>
+
+			<!-- 项目数 - 构建时获取 -->
+			<div
+				class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:shadow-lg transition-all hover:-translate-y-1"
+			>
+				<div class="text-3xl font-bold text-green-600">
+					{projectCount}
+				</div>
+				<div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+					项目
+				</div>
+			</div>
+
+			<!-- 访客数 - 客户端从 Vercel Analytics 获取 -->
+			<div
+				class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:shadow-lg transition-all hover:-translate-y-1 relative overflow-hidden"
+			>
+				<div
+					id="visitor-count"
+					class="text-3xl font-bold text-purple-600 flex items-center justify-center gap-2"
+				>
+					<span class="animate-pulse">...</span>
+				</div>
+				<div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+					访客
+				</div>
+				<!-- 实时指示器 -->
+				<div
+					id="live-indicator"
+					class="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full hidden animate-pulse"
+				>
+				</div>
+			</div>
+		</div>
+
+		<!-- 数据来源说明 -->
+		<p class="text-xs text-gray-400 text-center mt-4">
+			数据由 <a
+				href="https://vercel.com/analytics"
+				target="_blank"
+				class="underline hover:text-gray-600">Vercel Analytics</a
+			> 提供
+		</p>
+	</section>
+
+	<!-- 联系方式 -->
+	<section class="py-12 border-t border-gray-200 dark:border-gray-800">
+		<h2 class="text-2xl font-bold border-l-4 border-red-500 pl-4 mb-6">
+			联系我
+		</h2>
+		<p class="text-gray-700 dark:text-gray-300 mb-4">
+			欢迎通过以下方式与我交流，无论是技术讨论、项目合作还是随便聊聊！
+		</p>
+		<div class="flex flex-wrap gap-4">
+			<a
+				href="https://github.com/Bridge-W"
+				target="_blank"
+				class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+			>
+				<span>GitHub</span>
+			</a>
+			<!-- 🔥 这里也改成触发 Toast -->
+			<button
+				id="email-btn-footer"
+				class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+			>
+				<span>Email</span>
+			</button>
+			<a
+				href="/rss.xml"
+				class="flex items-center gap-2 px-4 py-2 border border-orange-500 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+			>
+				<span>RSS 订阅</span>
+			</a>
+		</div>
+	</section>
+</PageLayout>
+
+<!-- 🔥 渲染 EmailToast 组件（必须放在这里才能显示） -->
+<EmailToast />
+
+<!-- 脚本区域 -->
+<script>
+	// 🔥 从 Vercel Analytics 或 API 获取访客数据
+	async function fetchVisitorStats() {
+		try {
+			// 方案 1：从自己的 API 获取（推荐，可以聚合多个数据源）
+			const response = await fetch("/api/stats");
+			const data = await response.json();
+
+			updateVisitorCount(data.visitors || 1000);
+
+			// 显示实时指示器
+			const indicator = document.getElementById("live-indicator");
+			if (indicator) indicator.classList.remove("hidden");
+		} catch (error) {
+			console.error("Failed to fetch stats:", error);
+			// 后备：使用本地存储的计数
+			const fallbackCount = getLocalVisitorCount();
+			updateVisitorCount(fallbackCount);
+		}
+	}
+
+	// 本地访客计数（后备方案）
+	function getLocalVisitorCount() {
+		let count = parseInt(localStorage.getItem("total-visitors") || "1000");
+		if (!sessionStorage.getItem("counted")) {
+			count++;
+			localStorage.setItem("total-visitors", count.toString());
+			sessionStorage.setItem("counted", "true");
+		}
+		return count;
+	}
+
+	// 更新显示
+	function updateVisitorCount(count: number) {
+		const el = document.getElementById("visitor-count");
+		if (el) {
+			// 数字动画效果
+			animateNumber(el, 0, count, 1000);
+		}
+	}
+
+	// 数字递增动画
+	function animateNumber(
+		element: HTMLElement,
+		start: number,
+		end: number,
+		duration: number,
+	) {
+		const startTime = performance.now();
+
+		function update(currentTime: number) {
+			const elapsed = currentTime - startTime;
+			const progress = Math.min(elapsed / duration, 1);
+
+			// 缓动函数
+			const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+			const current = Math.floor(start + (end - start) * easeOutQuart);
+
+			element.innerHTML =
+				current.toLocaleString() + '<span class="text-lg">+</span>';
+
+			if (progress < 1) {
+				requestAnimationFrame(update);
+			}
+		}
+
+		requestAnimationFrame(update);
+	}
+
+	// 页面加载后获取数据
+	document.addEventListener("DOMContentLoaded", fetchVisitorStats);
+	// 为所有 email 按钮添加点击事件
+	document.getElementById("email-btn")?.addEventListener("click", () => {
+		window.showEmailToast?.();
+	});
+
+	document
+		.getElementById("email-btn-footer")
+		?.addEventListener("click", () => {
+			window.showEmailToast?.();
+		});
+</script>

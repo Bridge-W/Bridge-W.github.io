@@ -1,0 +1,31 @@
+---
+interface Props {
+    headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+// 只显示 h2 和 h3
+const filteredHeadings = headings.filter((h) => h.depth <= 3);
+---
+
+{
+    filteredHeadings.length > 0 && (
+        <nav class="text-sm">
+            <h3 class="font-bold mb-3 text-gray-900 dark:text-gray-100">
+                目录
+            </h3>
+            <ul class="space-y-2 border-l border-gray-200 dark:border-gray-700">
+                {filteredHeadings.map((heading) => (
+                    <li style={`padding-left: ${(heading.depth - 2) * 12}px`}>
+                        <a
+                            href={`#${heading.slug}`}
+                            class="block text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                            {heading.text}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    )
+}
